@@ -1,11 +1,17 @@
-# rl-series
+# Simple DQN PyTorch implementation
 
-This repository holds the code associated with my ongoing series of blog posts on Deep RL.
-- [x] ~~DQN~~ [[code](https://github.com/saashanair/rl-series/tree/master/dqn)][[blogpost](https://medium.com/@saasha/rl-series-2-dqn-e739eb3ab1d1)]
-- [ ] Double DQN
-- [ ] Dueling DQN
-- [x] ~~DDPG~~ [[code](https://github.com/saashanair/rl-series/tree/master/ddpg)][[blogpost](https://www.saashanair.com/ddpg-theory/)]
-- [x] ~~TD3~~ [[code](https://github.com/saashanair/rl-series/tree/master/td3)] [[blogpost](https://www.saashanair.com/td3-theory/)]
-- [ ] A3C [[code](https://github.com/saashanair/rl-series/tree/master/a3c)][[blogpost](https://www.saashanair.com/a3c-algorithm-with-cartpole/)] [code status: To refactor and document]
-- [ ] TRPO
-- [ ] PPO
+Adaptation of [this repo](https://github.com/saashanair/rl-series) for teaching purposes, all credits go to [S. Nair](https://saashanair.com).
+
+## Usage
+
+To train the agent with default settings
+
+```sh
+python main.py --train
+```
+
+To test the agent
+
+```sh
+python main.py --results-folder <basepath_where_the_models_are_stored>
+```

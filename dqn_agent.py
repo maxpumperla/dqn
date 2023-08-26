@@ -1,7 +1,3 @@
-"""
-Script that contains details how the DQN agent learns, updates the target network, selects actions and save/loads the model
-"""
-
 import random
 import numpy as np
 
@@ -131,30 +127,16 @@ class DQNAgent:
         if len(self.memory) < batchsize:
             return
         states, actions, next_states, rewards, dones = self.memory.sample(batchsize, self.device)
-        actions = actions.view(-1, 1)
-        rewards = rewards.view(-1, 1)
-        dones = dones.view(-1, 1)
-
-        #print('BLEH: ', actions.shape, rewards.shape, dones.shape)
 
         # get q values of the actions that were taken, i.e calculate qpred; 
         # actions vector has to be explicitly reshaped to nx1-vector
-        q_pred = self.policy_net.forward(states).gather(1, actions) 
+        q_pred = self.policy_net.forward(states).gather(1, actions.view(-1, 1)) 
         
         #calculate target q-values, such that yj = rj + q(s', a'), but if current state is a terminal state, then yj = rj
-        target_action = torch.argmax(self.policy_net.forward(next_states), dim=1)#.numpy()
-        #print('Target action: ', target_action.shape)
-        #print('YO: ', target_action)
-        q_target = self.target_net.forward(next_states).gather(1, target_action.view(-1, 1)) # because max returns data structure with values and indices
-        #print('Q Target: ', q_target.shape)
+        q_target = self.target_net.forward(next_states).max(dim=1).values # because max returns data structure with values and indices
         q_target[dones] = 0.0 # setting Q(s',a') to 0 when the current state is a terminal state
-        #print('Q Target after dones: ', q_target.shape)
-        
         y_j = rewards + (self.discount * q_target)
-        #print('reward: ', rewards.shape)
-        #print('y_j: ', y_j.shape)
-        #y_j = y_j.view(-1, 1)
-        #print('HELLO: ', y_j.shape, q_pred.shape)
+        y_j = y_j.view(-1, 1)
         
         # calculate the loss as the mean-squared error of yj and qpred
         self.policy_net.optimizer.zero_grad()
@@ -194,15 +176,3 @@ class DQNAgent:
         """
 
         self.policy_net.load_model(filename=filename, device=self.device)
-
-
-
-
-
-
-
-
-
-
-
-
